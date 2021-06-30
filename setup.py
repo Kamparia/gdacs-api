@@ -1,34 +1,42 @@
 #!/usr/bin/env python3
+import os 
+import sys
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 version = "0.1"
+
+long_description = open('README.md').read()
+
+if sys.argv[-1] == 'publish':
+    os.system('python setup.py sdist upload')
+    sys.exit()
+
 
 setup(
     name="gdacs-api",
     version=version,
     author="Olaoye Anthony Somide",
     author_email="olaoye.somide@wfp.org",
-    license="Apache 2.0",
+    license="MIT",
     url="https://github.com/Kamparia/gdacs-api",
     download_url=(
         f'https://github.com/Kamparia/gdacs-api/archive/{version}.tar.gz'
     ),
     description="Unofficial python library for working with GDACS API.",
-    long_description=open('README.rst').read(),
-    packages=find_packages(exclude=["*test*"]),    
-    include_package_data=True,
+    long_description=long_description,
+    keywords='gdacs disasters earthquakes tropical-cyclones earthquakes floods',
+    packages=['gdacs'],
+    python_requires=">=3.5",    
     install_requires=[
-        "requests",
+        "requests>=2.10.0",
         "xmltodict",
         "cachetools",
     ],
-    keywords='gdacs disasters earthquakes tropical-cyclones floods',
-    python_requires=">=3.5",    
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
-        'Topic :: Software Development :: Build Tools',
+        'Operating System :: OS Independent',
         'License :: OSI Approved :: MIT License',
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
