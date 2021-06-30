@@ -4,7 +4,7 @@ import xmltodict
 from cachetools import cached, TTLCache
 
 CACHE_TTL = 300 # 5minutes
-DATA_FORMATS = ['xml', 'geojson']
+DATA_FORMATS = ['xml', 'geojson', 'shp']
 BASE_URL = "https://www.gdacs.org/datareport/resources"
 RSS_FEED_URLS = {
     "default": "https://www.gdacs.org/xml/rss.xml",
@@ -41,7 +41,7 @@ class GDACSAPIReader:
             raise GDACSAPIError("API Error: Used an invalid `historical` parameter in request.")
 
     @cached(cache=TTLCache(maxsize=50000, ttl=CACHE_TTL))
-    def get_event(self, event_type: str, event_id: str, episode_id: str=None, data_format: str='xml'):
+    def get_event(self, event_type: str, event_id: str, episode_id: str=None, data_format: str='xml', cap_file: bool=False):
         """ Get record of a single event from GDACS API. """
         def handle_geojson(endpoint):
             res = requests.get(endpoint)
@@ -58,12 +58,29 @@ class GDACSAPIReader:
                 return json.dumps(content)
             else:
                 raise GDACSAPIError("API Error: Unable to read XML data for GDACS event.")
+
+        def download_shp(endpoint):
+            res = requests.get(endpoint, allow_redirects=True)
+            if  res.status_code == 200:
+                try:
+                    shp_file_name = endpoint.split('/')[-1]
+                    with open(shp_file_name, 'wb') as download:
+                        download.write(res.content)
+                        return f"Downloaded {shp_file_name} in directory."
+                except Exception as error:
+                    raise error
+            else:
+                raise GDACSAPIError("API Error: Unable to read SHP/KML data for GDACS event.")
         
         if data_format in DATA_FORMATS:
             if data_format == 'geojson':
                 return handle_geojson(f"{BASE_URL}/{event_type}/{event_id}/geojson_{event_id}_{episode_id}.geojson")
+            elif data_format == 'shp':
+                return download_shp(f"{BASE_URL}/{event_type}/{event_id}/Shape_{event_id}_{episode_id}.zip")
             else:
-                if episode_id == None:
+                if cap_file == True:
+                    return handle_xml(f"{BASE_URL}/{event_type}/{event_id}/cap_{event_id}.xml")
+                elif episode_id == None:
                     return handle_xml(f"{BASE_URL}/{event_type}/{event_id}/rss_{event_id}.xml")
                 else:
                     return handle_xml(f"{BASE_URL}/{event_type}/{event_id}/rss_{event_id}_{episode_id}.xml")
