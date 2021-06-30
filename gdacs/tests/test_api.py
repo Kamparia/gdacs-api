@@ -1,5 +1,5 @@
 from unittest import TestCase
-from gdacs import GDACSAPIReader, GDACSAPIError
+from gdacs.api import GDACSAPIReader, GDACSAPIError
 
 
 class TestGDACSAPI(TestCase):
