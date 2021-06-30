@@ -14,7 +14,7 @@ pip install gdacs-api
 To access the API functionalities of this libray, you need to import it into the Python script where it will be called.
 
 ```python
-from gdacs import GDACSAPIReader
+from gdacs.api import GDACSAPIReader
 ```
 
 ### Setup API Client
@@ -77,7 +77,7 @@ Optional parameters:
 
 Invalid arguments or retrieval of missing records from the GDACS API may result in an error. You can catch them with `GDACSAPIError` which includes the error message returned.
 ```python
-from gdacs import GDACSAPIError
+from gdacs.api import GDACSAPIError
 try:
     # try to retrieve an invalid/missing event
     client.get_event(event_type='DR', event_id='1012428', source_format='geojson')
