@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
 import os 
 import sys
-import codecs
 
 from setuptools import setup
 
 version = "0.1.1"
 
-here = os.path.abspath(os.path.dirname(__file__))
-
-with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
-    long_description = "\n" + fh.read()
+long_description = open('README.md').read()
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
