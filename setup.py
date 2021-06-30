@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 import os 
 import sys
+import codecs
 
 from setuptools import setup
 
-version = "0.1"
+version = "0.1.1"
 
-long_description = open('README.md').read()
+here = os.path.abspath(os.path.dirname(__file__))
+
+with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
+    long_description = "\n" + fh.read()
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
@@ -20,11 +24,9 @@ setup(
     author_email="olaoye.somide@wfp.org",
     license="MIT",
     url="https://github.com/Kamparia/gdacs-api",
-    download_url=(
-        f'https://github.com/Kamparia/gdacs-api/archive/{version}.tar.gz'
-    ),
     description="Unofficial python library for working with GDACS API.",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     keywords='gdacs disasters earthquakes tropical-cyclones earthquakes floods',
     packages=['gdacs'],
     python_requires=">=3.5",    
