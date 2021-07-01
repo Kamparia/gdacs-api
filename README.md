@@ -44,6 +44,7 @@ fl_events = client.latest_events(event_type="FL", historical="7d")
 Optional parameters:
 - `event_type` (str): TC (Tropical Cyclones), EQ (Earthquakes), FL (Floods), VO (Volcanoes), WF (Wild Fires) and DR (Droughts)
 - `historical` (str): 24h (Last 24 hours), 7d (Last 7 days)
+- `limit` (int): returned events count.
 
 ### Get Single Event Record
 
