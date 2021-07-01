@@ -5,7 +5,7 @@ import xmltodict
 from cachetools import cached, TTLCache
 
 CACHE_TTL = 300 # 5minutes
-EVENT_TYPES = ['TC', 'EQ', 'FL', 'VO', 'DR', 'WF']
+EVENT_TYPES = [None, 'TC', 'EQ', 'FL', 'VO', 'DR', 'WF']
 DATA_FORMATS = ['xml', 'geojson', 'shp']
 BASE_URL = "https://www.gdacs.org/datareport/resources"
 RSS_FEED_URLS = {
@@ -47,7 +47,7 @@ class GDACSAPIReader:
                     continue
                 
                 events.append(item)
-            return json.dumps(events[:limit])
+            return json.loads(json.dumps(events[:limit]))
         else:
             error_msg = "API Error: GDACS RSS feed can not be reached."
             raise GDACSAPIError(error_msg)
@@ -65,7 +65,7 @@ class GDACSAPIReader:
         def handle_geojson(endpoint):
             res = requests.get(endpoint)
             if  res.status_code == 200:
-                return json.dumps(json.loads(res.content))
+                return json.loads(res.content)
             else:
                 error_msg = "API Error: Unable to read GeoJSON data for GDACS event."
                 raise GDACSAPIError(error_msg)
@@ -75,7 +75,7 @@ class GDACSAPIReader:
             if  res.status_code == 200:
                 xml_parser = xmltodict.parse(res.content)
                 content = xml_parser["rss"]["channel"]["item"]
-                return json.dumps(content)
+                return json.loads(json.dumps(content))
             else:
                 error_msg = "API Error: Unable to read XML data for GDACS event."
                 raise GDACSAPIError(error_msg)

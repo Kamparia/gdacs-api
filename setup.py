@@ -4,7 +4,7 @@ import sys
 
 from setuptools import setup
 
-version = "0.1.4"
+version = "0.1.5"
 
 long_description = open('README.md').read()
 
