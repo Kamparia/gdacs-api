@@ -27,10 +27,11 @@ client = GDACSAPIReader()
 
 ### Get Latest Events
 
-Use the code snippet below to retrieve latets disaster events from the GDACS API.
+Use the code snippet below to retrieve latets disaster events from the [GDACS RSS Feed](https://www.gdacs.org/xml/rss.xml).
 
 ```python
-events = client.latest_events()
+events = client.latest_events() # all recent events
+events = client.latest_events(limit=10) # 10 most events
 ```
 
 You can also filter by event types or historical timeline. E.g. In the code snippet below, the first statement will return only Tropical Cyclone (TC) events that occured within the last 24 hours while the second statement will return Flooding (FL) events that occured within the last 7 days.

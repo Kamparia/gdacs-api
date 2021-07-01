@@ -21,8 +21,8 @@ class GDACSAPIReader:
     def __repr__(self) -> str:
         return "GDACS API Client."
 
-    @cached(cache=TTLCache(maxsize=50000, ttl=CACHE_TTL))
-    def latest_events(self, event_type:str=None, historical:str='default'):
+    @cached(cache=TTLCache(maxsize=500, ttl=CACHE_TTL))
+    def latest_events(self, event_type:str=None, historical:str='default', limit:int=None):
         """ Get latest events from GDACS RSS feed. """
         if event_type not in EVENT_TYPES:
             raise GDACSAPIError("API Error: Used an invalid `event_type` parameter in request.")
@@ -40,11 +40,11 @@ class GDACSAPIReader:
                     continue
                 
                 events.append(item)
-            return json.dumps(events)
+            return json.dumps(events[:limit])
         else:
             raise GDACSAPIError("API Error: GDACS RSS feed can not be reached.")
 
-    @cached(cache=TTLCache(maxsize=50000, ttl=CACHE_TTL))
+    @cached(cache=TTLCache(maxsize=500, ttl=CACHE_TTL))
     def get_event(self, event_type: str, event_id: str, episode_id: str=None, source_format: str='xml', cap_file: bool=False):
         """ Get record of a single event from GDACS API. """
         def handle_geojson(endpoint):
