@@ -91,7 +91,7 @@ class GDACSAPIReader:
                 except Exception as error:
                     raise error
             else:
-                error_msg = "API Error: Unable to read SHP/KML data for GDACS event."
+                error_msg = "API Error: Unable to read SHP data for GDACS event."
                 raise GDACSAPIError(error_msg)
         
         if event_type not in EVENT_TYPES:
@@ -108,7 +108,7 @@ class GDACSAPIReader:
                 event_type, 
                 event_id, 
                 "geojson_{}_{}.geojson".format(event_id, episode_id)
-            )
+            ).replace("\\","/")
             return handle_geojson(url_path)
 
         elif source_format == 'shp':
@@ -117,7 +117,7 @@ class GDACSAPIReader:
                 event_type, 
                 event_id, 
                 "Shape_{}_{}.zip".format(event_id, episode_id)
-            )
+            ).replace("\\","/")
             return download_shp(url_path)
 
         else:
@@ -127,7 +127,7 @@ class GDACSAPIReader:
                     event_type, 
                     event_id, 
                     "cap_{}.xml".format(event_id)
-                )
+                ).replace("\\","/")
                 return handle_xml(url_path)
 
             elif episode_id == None:
@@ -136,7 +136,7 @@ class GDACSAPIReader:
                     event_type, 
                     event_id, 
                     "rss_{}.xml".format(event_id)
-                )
+                ).replace("\\","/")
                 return handle_xml(url_path)
 
             else:
@@ -145,7 +145,7 @@ class GDACSAPIReader:
                     event_type, 
                     event_id, 
                     "rss_{}_{}.xml".format(event_id, episode_id)
-                )
+                ).replace("\\","/")
                 return handle_xml(url_path)
 
 
