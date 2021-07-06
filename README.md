@@ -2,11 +2,30 @@
 Unofficial python library for working with [Global Disaster Alert and Coordination System (GDACS)](https://www.gdacs.org/) API.
 
 ## Setup
-Use the command below to install the `gdacs-api` python library.
+If you already have `pip` installed, use the commands below to install the `gdacs-api` python library.
 
+From pypi.org:
 ```shell
-pip install gdacs-api
+(venv)$ pip install gdacs-api
 ```
+
+From GitHub with pip:
+```shell
+(venv)$ pip install git+https://github.com/Kamparia/gdacs-api.git
+```
+
+From cloned GitHub repo for development:
+```shell
+(venv)$ git clone https://github.com/Kamparia/gdacs-api.git
+(venv)$ cd ./gdacs-api
+(venv)$ pip install -e .
+```
+
+The installation of `gdacs-api v.1.0.6` package depends on the following packages.
+- Python >=3.6
+- Requests >=2.10.0
+- Xmltodict
+- Cachetools
 
 ## Getting Started
 ### Import Library
@@ -85,6 +104,14 @@ try:
     client.get_event(event_type='DR', event_id='1012428', source_format='geojson')
 except GDACSAPIError as error:
     print(error)
+```
+
+### Testing
+
+The project uses `unittest` (Python inbuilt testing library) to run its suite of unit tests.
+```shell
+(venv)$ cd ./gdacs/tests
+(venv)$ python -m unittest
 ```
 
 ## License
