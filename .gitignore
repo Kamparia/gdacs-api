@@ -130,3 +130,5 @@ dmypy.json
 
 main.py
 *.zip
+
+.idea/*

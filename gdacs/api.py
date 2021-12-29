@@ -30,28 +30,23 @@ class GDACSAPIReader:
     ):
         """ Get latest events from GDACS RSS feed. """
         if event_type not in EVENT_TYPES:
-            error_msg = "API Error: Used an invalid `event_type` parameter in request."
-            raise GDACSAPIError(error_msg)
+            raise GDACSAPIError("API Error: Used an invalid `event_type` parameter in request.")
 
         if historical not in RSS_FEED_URLS.keys():
-            error_msg = "API Error: Used an invalid `historical` parameter in request."
-            raise GDACSAPIError(error_msg)
-            
-        res = requests.get(RSS_FEED_URLS[historical])
-        if res.status_code == 200:
-            events = []
-            xml_parser = xmltodict.parse(res.content)
-            for item in xml_parser["rss"]["channel"]["item"]:
-                # filter by event type
-                if event_type != None and event_type != item["gdacs:eventtype"]:
-                    continue
-                
-                events.append(item)
-            return json.loads(json.dumps(events[:limit]))
-        else:
-            error_msg = "API Error: GDACS RSS feed can not be reached."
-            raise GDACSAPIError(error_msg)
+            raise GDACSAPIError("API Error: Used an invalid `historical` parameter in request.")
 
+        res = requests.get(RSS_FEED_URLS[historical])
+        if res.status_code != 200:
+            raise GDACSAPIError("API Error: GDACS RSS feed can not be reached.")
+
+        xml_parser = xmltodict.parse(res.content)
+        events = [
+            item
+            for item in xml_parser["rss"]["channel"]["item"]
+            if event_type in [None, item["gdacs:eventtype"]]
+        ]
+
+        return json.loads(json.dumps(events[:limit]))
 
     @cached(cache=TTLCache(maxsize=500, ttl=CACHE_TTL))
     def get_event(self, 
