@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from gdacs.api import GDACSAPIReader, GDACSAPIError
+from gdacs.utils import delete_downloads
 
 
 class TestGDACSAPI(TestCase):
@@ -9,8 +10,7 @@ class TestGDACSAPI(TestCase):
 
     def tearDown(self):
         self.client = None
-
-        # delete all the files
+        delete_downloads()
 
     def test_latest_events_no_args(self):
         '''Test latest_events() without any arguments.'''
@@ -23,37 +23,15 @@ class TestGDACSAPI(TestCase):
         events = self.client.latest_events(limit=limit)
         self.assertEqual(len(events), limit)
 
-    def test_latest_events_historical(self):
-        ''' Test latest_events() with historical arguments. '''
-        day_events = self.client.latest_events(historical='24h')  # 24 hours
-        self.assertTrue(day_events) if len(day_events) > 0 else self.assertFalse(day_events)
-
-        week_events = self.client.latest_events(historical='7d')  # 7 days
-        self.assertTrue(week_events) if len(week_events) > 0 else self.assertFalse(week_events)
-
     def test_latest_events_event_types(self):
         ''' Test latest_events() filter by event_types argument. '''
-        tc_events = self.client.latest_events(event_type="TC")  # tropical cyclones
-        self.assertTrue(tc_events) if len(tc_events) > 0 else self.assertFalse(tc_events)
-
-        eq_events = self.client.latest_events(event_type="EQ")  # earthquakes
-        self.assertTrue(eq_events) if len(eq_events) > 0 else self.assertFalse(eq_events)
-
-        fl_events = self.client.latest_events(event_type="FL")  # floods
-        self.assertTrue(fl_events) if len(fl_events) > 0 else self.assertFalse(fl_events)
-
-        dr_events = self.client.latest_events(event_type="DR")  # droughts
-        self.assertTrue(dr_events) if len(dr_events) > 0 else self.assertFalse(dr_events)
-
-        wf_events = self.client.latest_events(event_type="WF")  # wild fires
-        self.assertTrue(wf_events) if len(wf_events) > 0 else self.assertFalse(wf_events)
-
-        vo_events = self.client.latest_events(event_type="VO")  # volcanoes
-        self.assertTrue(vo_events) if len(vo_events) > 0 else self.assertFalse(vo_events)
+        for event_type in ["TC", "EQ", "FL", "DR", "WF", "VO"]:
+            events = self.client.latest_events(event_type=event_type) 
+            self.assertTrue(events) if len(events) > 0 else self.assertFalse(events)
     
     def test_latest_events_multiple_args(self):
         ''' Test latest_events() with multiple argumnets defined. '''
-        events = self.client.latest_events(event_type="TC", historical='24h', limit=5)
+        events = self.client.latest_events(event_type="EQ", limit=5)
         self.assertTrue(events) if len(events) > 0 else self.assertFalse(events)
         self.assertEqual(len(events), 5) if len(events) == 5 else self.assertFalse(events)
 

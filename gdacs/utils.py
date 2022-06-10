@@ -1,3 +1,5 @@
+import os
+import glob
 import json
 import requests
 import xmltodict
@@ -8,6 +10,7 @@ class GDACSAPIError(RuntimeError):
 
 
 def handle_geojson(endpoint):
+    """ Handle GeoJSON file data types. """
     res = requests.get(endpoint)
     if res.status_code != 200:
         raise GDACSAPIError("API Error: Unable to read GeoJSON data for GDACS event.")
@@ -34,6 +37,14 @@ def download_shp(endpoint):
         shp_file_name = endpoint.split('/')[-1]
         with open(shp_file_name, 'wb') as download:
             download.write(res.content)
-            return "Downloaded {} in directory.".format(shp_file_name)
-    except Exception as error:
-        raise error
+            return f"Downloaded {shp_file_name} in directory."
+    except (FileNotFoundError, ValueError) as error:
+        raise GDACSAPIError(f"SHP Download Error: {error}") from error
+
+
+def delete_downloads() -> str:
+    """ Delete all downloaded files. """
+    for file in glob.glob("*.zip"):
+        os.remove(file)
+
+    return "Deleted all downloaded files."

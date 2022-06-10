@@ -21,11 +21,12 @@ From cloned GitHub repo for development:
 (venv)$ pip install -e .
 ```
 
-The installation of `gdacs-api v.1.0.6` package depends on the following packages.
+The installation of `gdacs-api v.2.0.0` package depends on the following packages.
 - Python >=3.6
 - Requests >=2.10.0
 - Xmltodict
 - Cachetools
+- Pydantic
 
 ## Getting Started
 ### Import Library
@@ -53,16 +54,15 @@ events = client.latest_events() # all recent events
 events = client.latest_events(limit=10) # 10 most events
 ```
 
-You can also filter by event types or historical timeline. E.g. In the code snippet below, the first statement will return only Tropical Cyclone (TC) events that occured within the last 24 hours while the second statement will return Flooding (FL) events that occured within the last 7 days.
+You can filter event by the different types of natural disasters.
 
 ```python
-tc_events = client.latest_events(event_type="TC", historical="24h")
-fl_events = client.latest_events(event_type="FL", historical="7d")
+tc_events = client.latest_events(event_type="TC")
+fl_events = client.latest_events(event_type="FL")
 ```
 
 Optional parameters:
 - `event_type` (str): TC (Tropical Cyclones), EQ (Earthquakes), FL (Floods), VO (Volcanoes), WF (Wild Fires) and DR (Droughts)
-- `historical` (str): 24h (Last 24 hours), 7d (Last 7 days)
 - `limit` (int): returned events count.
 
 ### Get Single Event Record

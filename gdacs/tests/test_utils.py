@@ -1,7 +1,6 @@
 from unittest import TestCase
 
-from gdacs.utils import GDACSAPIError, handle_geojson
-from gdacs.utils import handle_xml, download_shp
+from gdacs.utils import *
 
 
 class TestUtils(TestCase):
@@ -10,7 +9,7 @@ class TestUtils(TestCase):
 
     def tearDown(self) -> None:
         # delete temporary files
-        pass
+        delete_downloads()
 
     def test_handle_geojson(self):
         """
@@ -63,3 +62,11 @@ class TestUtils(TestCase):
         url = 'https://www.gdacs.org/datareport/resources/TC/1000194/Shape_1000194_41.zip'
         with self.assertRaises(GDACSAPIError):
             download_shp(url)
+
+    def test_delete_downloads(self):
+        """
+        Test the delete_downloads function
+        :return:
+        """
+        data = delete_downloads()
+        self.assertEqual(data, "Deleted all downloaded files.")
